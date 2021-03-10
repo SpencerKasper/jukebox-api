@@ -18,6 +18,19 @@ export class JukeboxMongoClient {
             });
     }
 
+    async playNextSongOnAmbientQueue(owner) {
+        return await this.client.connect()
+            .then(async err => {
+                const collection = this.client.db('jukebox').collection('ambient_queue');
+                const data = await collection.find({_id: {owner}}).toArray();
+                const ambientQueue = data[0] ? data[0].ambientQueue : [];
+                const updatedTrackToPlay = ambientQueue.shift();
+                const updatedAmbientQueue = {owner, ambientQueue, currentPlayingTrackUri: updatedTrackToPlay};
+                this.updateAmbientQueue(updatedAmbientQueue)
+                return updatedAmbientQueue;
+            });
+    }
+
     updateAmbientQueue(data) {
         this.client.connect(async err => {
             const collection = this.client.db("jukebox").collection("ambient_queue");

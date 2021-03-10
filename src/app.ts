@@ -3,7 +3,7 @@ import {defaultRoute} from "./routes/helloWorldService";
 import {updateAmbientQueueRoute} from "./routes/update-ambient-queue-service";
 import bodyParser from "body-parser";
 import cors from 'cors';
-import {getAmbientQueueRoute} from "./routes/get-ambient-queue-route";
+import {getAmbientQueueRoute, playNextSongOnAmbientQueue} from "./routes/get-ambient-queue-route";
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -13,8 +13,9 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.get('/', defaultRoute);
-app.post('/updateAmbientQueue', updateAmbientQueueRoute);
-app.get('/getAmbientQueue/:owner', getAmbientQueueRoute);
+app.post('/ambientQueue/update', updateAmbientQueueRoute);
+app.get('/ambientQueue/:owner', getAmbientQueueRoute);
+app.post('/ambientQueue/nextSong/:owner', playNextSongOnAmbientQueue)
 
 app.listen(PORT, () => {
     console.log(`Hello world at http://localhost:${PORT}!`)
