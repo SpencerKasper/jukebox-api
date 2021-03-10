@@ -46,4 +46,19 @@ export class JukeboxMongoClient {
             await this.client.close();
         });
     }
+
+    clearAmbientQueue(data) {
+        this.client.connect(async err => {
+            const collection = this.client.db("jukebox").collection("ambient_queue");
+            const owner = data.owner;
+            await collection.updateOne({_id: {owner}}, {
+                $set: {
+                    ambientQueue: [],
+                    currentPlayingTrackUri: '',
+                    owner,
+                }
+            }, {upsert: true});
+            await this.client.close();
+        });
+    }
 }
